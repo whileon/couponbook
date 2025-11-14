@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+  <link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#000000" />
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/couponbook/service-worker.js');
+  }
+</script>
   <meta charset="UTF-8" />
   <title>공주님 디지털 쿠폰북❤️</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
