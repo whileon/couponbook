@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>우리 쿠폰북</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- 여기 icon.png 자리에 공주♥/파트라슈 아이콘 파일 넣으면 홈 화면 아이콘으로 사용 가능 -->
+ <link rel="icon" type="image/png" 
+href="https://ai.esmplus.com/whiletype/%EC%98%A4%EB%8B%89%EC%8A%A4%EC%8A%A4%ED%86%A0%EC%96%B4/icon.png" />
+  <style>
+/* 전체 기본 글자 살짝 키우기 */
+body {
+  font-size: 18px; /* 기존보다 약 10~12% 증가 */
+}
+
+/* 쿠폰 제목 (앞/뒤 공통) */
+.coupon-title {
+  font-size: 1.35rem;   /* 원래 1.0rem → 크게 */
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+/* 앞면/뒷면 짧은 설명 */
+.coupon-sub {
+  font-size: 1.05rem;   /* 원래 0.8rem~1rem 보다 업 */
+  margin-bottom: 10px;
+  line-height: 1.55;
+}
+
+/* 뒷면 내용 특별히 더 키움 */
+#back-sub {
+  font-size: 1.12rem;   /* 뒷면만 더 크게 */
+  line-height: 1.6;
+}
+
+/* 사용 정보 “남은 장수 / 마지막 사용일” */
+.used-info {
+  font-size: 0.95rem;   /* 원래보다 업 */
+}
+
+/* 칩(총 몇 장 중, 태그) */
+.chip {
+  font-size: 0.9rem;    /* 기존 0.72rem → 업 */
+  padding: 4px 10px;
+}
+
+/* 버튼 */
+.btn {
+  font-size: 0.85rem;
+  padding: 8px 14px;
+}
+
+/* 작은 버튼도 조금 키움 */
+.btn-small {
+  font-size: 0.82rem;
+  padding: 6px 12px;
+}
+
+/* 힌트 글씨 */
+.hint {
+  font-size: 0.8rem;    /* 조금 더 크게 */
+}
+
+/* 네비게이션 텍스트 */
+.nav-title {
+  font-size: 0.88rem;
+}
+
+.nav-title span {
+  font-size: 0.95rem;
+}
+
+/* 헤더 상단 텍스트 */
+.title {
+  font-size: 1rem;
+}
+.subtitle {
+  font-size: 0.85rem;
+}
+.dday {
+  font-size: 0.95rem;
+}
+.remain {
+  font-size: 0.85rem;
+}
+
+    :root {
+      --bg: #050508;
+      --card-bg: #111117;
+      --gold: #d4af37;
+      --gold-soft: #f5e3a1;
+      --text-main: #f7f7f7;
+      --text-sub: #b3b3b3;
+      --danger: #ff6b6b;
+      --success: #4cd964;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1b1b27 0, #050508 55%);
+      color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 420px;
+      height: 100%;
+      max-height: 820px;
+      border-radius: 24px;
+      border: 1px solid rgba(212, 175, 55, 0.5);
+      background: radial-gradient(circle at top, #15151f 0, #050508 60%);
+      box-shadow: 0 18px 60px rgba(0, 0, 0, 0.7);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* 잠금 화면 */
+    #lock-screen {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at top, #181824 0, #010103 60%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 50;
+    }
+
+    .lock-box {
+      width: 90%;
+      max-width: 360px;
+      padding: 24px 20px 20px;
+      border-radius: 20px;
+      border: 1px solid rgba(212, 175, 55, 0.7);
+      background: linear-gradient(145deg, #07070b, #14141f);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8);
+      text-align: center;
+    }
+
+    .lock-title {
+      font-size: 1.1rem;
+      letter-spacing: 0.05em;
+      color: var(--gold-soft);
+      margin-bottom: 8px;
+    }
+
+    .lock-sub {
+      font-size: 0.8rem;
+      color: var(--text-sub);
+      margin-bottom: 18px;
+    }
+
+    .lock-input {
+      width: 120px;
+      padding: 10px 12px;
+      font-size: 1.1rem;
+      text-align: center;
+      border-radius: 999px;
+      border: 1px solid rgba(212, 175, 55, 0.8);
+      background: rgba(5, 5, 10, 0.9);
+      color: var(--text-main);
+      outline: none;
+      letter-spacing: 0.2em;
+    }
+
+    .lock-input:focus {
+      box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.9);
+    }
+
+    .lock-btn {
+      margin-top: 14px;
+      padding: 9px 18px;
+      font-size: 0.9rem;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(120deg, #f5e3a1, #d4af37);
+      color: #111;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .lock-error {
+      margin-top: 10px;
+      min-height: 18px;
+      font-size: 0.78rem;
+      color: var(--danger);
+    }
+
+    /* 헤더 */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 4px 10px;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+    }
+
+    .title-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .title {
+      font-size: 0.95rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--gold-soft);
+    }
+
+    .subtitle {
+      font-size: 0.8rem;
+      color: var(--text-sub);
+    }
+
+    .status-wrap {
+      text-align: right;
+      font-size: 0.75rem;
+    }
+
+    .dday {
+      color: var(--gold-soft);
+      font-weight: 600;
+    }
+
+    .remain {
+      color: var(--text-sub);
+      margin-top: 2px;
+    }
+
+    /* 책 영역 */
+    .book-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding-top: 8px;
+      overflow: hidden;
+    }
+
+    .book {
+      position: relative;
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      perspective: 1600px;
+      overflow: hidden;
+    }
+
+    .page-container {
+      width: 100%;
+      max-width: 360px;
+      height: 100%;
+      max-height: 600px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .page {
+      width: 100%;
+      height: 100%;
+      max-height: 520px;
+      border-radius: 18px;
+      background: radial-gradient(circle at top, #1c1c27 0, #090910 55%);
+      border: 1px solid rgba(212, 175, 55, 0.5);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8);
+      padding: 14px 14px 12px;
+      position: relative;
+      transform-origin: left center;
+      transition: transform 0.5s ease, box-shadow 0.4s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .page-turn-left {
+      animation: turnLeft 0.45s ease forwards;
+    }
+
+    .page-turn-right {
+      animation: turnRight 0.45s ease forwards;
+    }
+
+    @keyframes turnLeft {
+      0% { transform: rotateY(0deg); box-shadow: 0 16px 40px rgba(0,0,0,0.8); }
+      100% { transform: rotateY(-18deg); box-shadow: 0 12px 26px rgba(0,0,0,0.6); }
+    }
+
+    @keyframes turnRight {
+      0% { transform: rotateY(0deg); box-shadow: 0 16px 40px rgba(0,0,0,0.8); }
+      100% { transform: rotateY(18deg); box-shadow: 0 12px 26px rgba(0,0,0,0.6); }
+    }
+
+    /* 쿠폰 카드 (앞/뒤 플립) */
+    .coupon-card {
+      position: relative;
+      flex: 1;
+      transform-style: preserve-3d;
+      transition: transform 0.6s ease;
+      cursor: pointer;
+    }
+
+    .coupon-card.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      border-radius: 14px;
+      background: radial-gradient(circle at top, #1b1b27 0, #08080c 60%);
+      border: 1px solid rgba(212, 175, 55, 0.6);
+      padding: 16px 16px 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card-back {
+      transform: rotateY(180deg);
+    }
+
+    .gold-frame {
+      flex: 1;
+      border-radius: 12px;
+      border: 1px solid rgba(212, 175, 55, 0.35);
+      padding: 12px 12px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+    }
+
+    .page-top-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .page-index {
+      font-size: 0.78rem;
+      color: var(--text-sub);
+    }
+
+    .page-tag {
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(212, 175, 55, 0.5);
+      color: var(--gold-soft);
+    }
+
+    .coupon-title {
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      margin-bottom: 4px;
+    }
+
+    .coupon-sub {
+      font-size: 0.8rem;
+      color: var(--text-sub);
+      margin-bottom: 6px;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .chip {
+      font-size: 0.72rem;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      color: var(--gold-soft);
+    }
+
+    .count-info {
+      font-size: 0.78rem;
+      margin-top: 6px;
+    }
+
+    .count-strong {
+      color: var(--gold-soft);
+      font-weight: 600;
+    }
+
+    .used-info {
+      font-size: 0.75rem;
+      color: var(--text-sub);
+      margin-top: 2px;
+    }
+
+    .used-info span {
+      color: var(--success);
+    }
+
+    .hint {
+      font-size: 0.7rem;
+      color: var(--text-sub);
+      margin-top: 6px;
+    }
+
+    .card-footer {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: 1px solid rgba(212, 175, 55, 0.8);
+      background: linear-gradient(120deg, rgba(245, 227, 161, 0.1), rgba(14, 14, 20, 0.9));
+      color: var(--gold-soft);
+      padding: 7px 12px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(120deg, #f5e3a1, #d4af37);
+      color: #111;
+      font-weight: 600;
+      border-color: transparent;
+    }
+
+    .btn-small {
+      font-size: 0.74rem;
+      padding: 5px 10px;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+
+    .nav-row {
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: 1px solid rgba(212, 175, 55, 0.6);
+      background: radial-gradient(circle at top, #1c1c27 0, #050508 70%);
+      color: var(--gold-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+
+    .nav-title {
+      font-size: 0.78rem;
+      color: var(--text-sub);
+      text-align: center;
+    }
+
+    .nav-title span {
+      color: var(--gold-soft);
+    }
+
+    /* 팝업 (날짜 입력) */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 40;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-box {
+      width: 90%;
+      max-width: 340px;
+      background: #07070d;
+      border-radius: 16px;
+      border: 1px solid rgba(212, 175, 55, 0.6);
+      padding: 16px 16px 12px;
+    }
+
+    .modal-title {
+      font-size: 0.95rem;
+      color: var(--gold-soft);
+      margin-bottom: 10px;
+    }
+
+    .modal-body {
+      font-size: 0.78rem;
+      color: var(--text-sub);
+      margin-bottom: 10px;
+    }
+
+    .modal-input {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(212, 175, 55, 0.6);
+      background: #050509;
+      color: var(--text-main);
+      font-size: 0.85rem;
+    }
+
+    .modal-actions {
+      margin-top: 12px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .footer-tip {
+      margin-top: 8px;
+      font-size: 0.7rem;
+      color: var(--text-sub);
+      text-align: center;
+    }
+
+    @media (max-height: 640px) {
+      .page {
+        max-height: 460px;
+      }
+      .card-face {
+        padding: 12px 12px 10px;
+      }
+      .gold-frame {
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 잠금 화면 -->
+  <div id="lock-screen">
+    <div class="lock-box">
+      <div class="lock-title">쿠폰북 잠금</div>
+      <div class="lock-sub">공주만 들어올 수 있는 비밀 쿠폰북이에요 💛<br/>비밀번호 4자리를 입력해 주세요.</div>
+      <input type="password" maxlength="4" class="lock-input" id="lock-input" autocomplete="off" />
+      <div>
+        <button class="lock-btn" id="lock-btn">입장하기</button>
+      </div>
+      <div class="lock-error" id="lock-error"></div>
+    </div>
+  </div>
+
+  <div class="app">
+    <!-- 헤더 -->
+    <header class="header">
+      <div class="title-wrap">
+        <div class="title">COUPON BOOK</div>
+        <div class="subtitle">파트라슈가 공주에게 주는 쿠폰북</div>
+      </div>
+      <div class="status-wrap">
+        <div class="dday" id="dday-text">D+0</div>
+        <div class="remain" id="remain-text">남은 쿠폰 0장</div>
+      </div>
+    </header>
+
+    <!-- 책 / 쿠폰 카드 -->
+    <main class="book-wrap">
+      <div class="book">
+        <div class="page-container">
+          <div class="page" id="page">
+            <div class="page-top-meta">
+              <div class="page-index" id="page-index">1 / 8</div>
+              <div class="page-tag" id="page-tag">쿠폰</div>
+            </div>
+            <div class="coupon-card" id="coupon-card">
+              <!-- 앞면 -->
+              <div class="card-face card-front">
+                <div class="gold-frame">
+                  <div>
+                    <div class="coupon-title" id="front-title">쿠폰 제목</div>
+                    <div class="coupon-sub" id="front-sub">쿠폰 간단 설명</div>
+                    <div class="chip-row" id="front-chips"></div>
+                    <div class="count-info">
+                      남은 장 수: <span class="count-strong" id="front-remaining">0장</span>
+                    </div>
+                    <div class="used-info" id="front-used-info"></div>
+                  </div>
+                  <div class="card-footer">
+                    <button class="btn btn-small" id="flip-to-back">뒷면 보기</button>
+                    <button class="btn btn-primary btn-small" id="use-front">사용하기</button>
+                  </div>
+                  <div class="hint">카드를 탭하면 앞/뒤가 뒤집혀요.</div>
+                </div>
+              </div>
+
+              <!-- 뒷면 -->
+              <div class="card-face card-back">
+                <div class="gold-frame">
+                  <div>
+                    <div class="coupon-title" id="back-title">쿠폰 상세 내용</div>
+                    <div class="coupon-sub" id="back-sub"></div>
+                    <div class="used-info" id="back-used-info"></div>
+                  </div>
+                  <div class="card-footer">
+                    <button class="btn btn-small" id="flip-to-front">앞면 보기</button>
+                    <button class="btn btn-primary btn-small" id="use-back">사용하기</button>
+                  </div>
+                  <div class="hint">사용하면 날짜가 저장되고 남은 개수가 줄어들어요.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 네비게이션 -->
+            <div class="nav-row">
+              <button class="nav-btn" id="prev-btn">&#9664;</button>
+              <div class="nav-title">
+                <span id="nav-title-text">쿠폰 1</span><br />
+                좌우로 넘기면 다른 쿠폰을 볼 수 있어요.
+              </div>
+              <button class="nav-btn" id="next-btn">&#9654;</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-tip">
+        폰 브라우저 메뉴에서 “홈 화면에 추가”를 하면 앱처럼 쓸 수 있어요.
+      </div>
+    </main>
+  </div>
+
+  <!-- 날짜 입력 모달 -->
+  <div class="modal" id="date-modal">
+    <div class="modal-box">
+      <div class="modal-title" id="modal-title">쿠폰 사용하기</div>
+      <div class="modal-body">
+        사용한 날짜를 적어둘게요. 오늘 날짜 그대로 두거나, 원하는 날짜로 바꿀 수 있어요.
+      </div>
+      <input type="date" class="modal-input" id="date-input" />
+      <div class="modal-actions">
+        <button class="btn btn-small" id="cancel-date">취소</button>
+        <button class="btn btn-primary btn-small" id="confirm-date">저장</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ====== 기본 데이터 ======
+    const coupons = [
+      {
+        id: 1,
+        title: "원하는 빵 무엇이든 먹으러 가기",
+        short: "공주가 먹고 싶은 빵 아무거나 · 거리·가격 제한 없음",
+        tag: "데이트",
+        total: 3,
+        desc: "공주가 먹고 싶은 빵, 디저트, 베이커리 <br>아무 곳이나 OK<br>거리, 가격 제한 없이 한 번 말하면 바로 데려가기.<br>공주가 2개 먹고 싶다 하면 2개도 가능!",
+      },
+      {
+        id: 2,
+        title: "10분 동안 원하는 만큼 안아주기",
+        short: "말 없이 10분 동안 꼭 껴안아 주기",
+        tag: "스킨십",
+        total: 5,
+        desc: "공주가 붙잡고 있는 동안 10분 이상 포옹 유지.<br> 말은 최소한으로, 손은 편하게 안아주는 용도만. <br>언제 끝낼지는 공주가 정해요.",
+      },
+      {
+        id: 3,
+        title: "마사지 쿠폰 (원하는 부위 30분)",
+        short: "원하는 부위 1곳 30분 집중 마사지",
+        tag: "케어",
+        total: 10,
+        desc: "어깨, 등, 허리, 다리 등 공주가 원하는 부위 1곳 골라서 30분 동안 집중 마사지. <br>중간에 대충하기 금지.<br> 강도와 속도는 공주가 지시하면 그대로 따르기.",
+      },
+      {
+        id: 4,
+        title: "달래주기 쿠폰 (이유 묻지 않기)",
+        short: "이유 절대 묻지 말고 끝까지 달래주기",
+        tag: "감정 케어",
+        total: 3,
+        desc: "공주가 힘들거나 토라졌을 때 사용하는 쿠폰. <br>‘왜 그래?’ 같은 질문 금지. <br>공주가 괜찮아질 때까지 옆에 있어주고, 안아주고, 머리 쓰다듬어주기. 말투는 끝까지 다정하게.",
+      },
+      {
+        id: 5,
+        title: "노예 쿠폰 (3시간)",
+        short: "3시간 동안 공주 전용 노예 모드",
+        tag: "미션",
+        total: 2,
+        desc: "3시간 동안 공주가 시키는 심부름, 집안일, 잡일 등을 불평 없이 수행. <br>‘귀찮아’ 금지. 다만 서로 상식선에서 가능한 것만, <br>몸에 무리 되는 건 제외.",
+      },
+      {
+        id: 6,
+        title: "성노예 쿠폰 (1회)",
+        short: "공주가 1일 여왕이되는 쿠폰!",
+        tag: "비밀",
+        total: 2,
+        desc: "공주가 원하는 취향과 하고싶은 모든것을 마음대로 할 수있음.<br> 상황극,복장,하고싶은행위,체위 원하는건 시키기만 하면 성노예는 성실히 수행.",
+      },
+      {
+        id: 7,
+        title: "식사 쿠폰 (원하는 음식 같이 먹기)",
+        short: "공주가 고른 메뉴로 함께 식사",
+        tag: "데이트",
+        total: 3,
+        desc: "공주가 먹고 싶은 메뉴로 식당을 정하면, <br>거리·가격 상관없이 같이 가서 즐겁게 식사하기. <br>가능하면 디저트까지, 대화 많이 하고 폰은 최소한만 보기.",
+      },
+      {
+        id: 8,
+        title: "긴급 소환 쿠폰",
+        short: "필요할 때 이유 불문 즉시 데리러 오기",
+        tag: "따까리 모드",
+        total: 1,
+        desc: "공주가 연락하면 가능한 한 빨리 데리러 오기. <br>이유 묻지 않고 ‘갈게’만 말하기. <br>도착 후에는 공주가 원하는 만큼 같이 있어주기.",
+      }
+    ];
+
+    // localStorage key
+    const STORAGE_KEY = "onyx_coupon_book_v1";
+
+    let state = {
+      coupons: {},
+      currentIndex: 0
+    };
+
+    function initState() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        try {
+          state = JSON.parse(saved);
+        } catch (e) {
+          console.error("state parse error", e);
+        }
+      }
+
+      // 최초 세팅
+      if (!state.coupons || Object.keys(state.coupons).length === 0) {
+        state.coupons = {};
+        coupons.forEach((c, idx) => {
+          state.coupons[c.id] = {
+            remaining: c.total,
+            usedDates: []
+          };
+        });
+      }
+
+      if (typeof state.currentIndex !== "number") {
+        state.currentIndex = 0;
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    // D-day 계산
+    function updateDDay() {
+      const start = new Date(2024, 8, 18); // 2024-09-18 (month 0부터 시작)
+      const today = new Date();
+      const diff = Math.floor((today - start) / (1000 * 60 * 60 * 24));
+      const ddayText = document.getElementById("dday-text");
+      ddayText.textContent = `D+${diff}`;
+    }
+
+    function getTotalRemaining() {
+      return coupons.reduce((sum, c) => {
+        const st = state.coupons[c.id];
+        return sum + (st ? st.remaining : 0);
+      }, 0);
+    }
+
+    function updateRemainText() {
+      const remainEl = document.getElementById("remain-text");
+      const total = getTotalRemaining();
+      remainEl.textContent = `남은 쿠폰 ${total}장`;
+    }
+
+    // 화면 렌더링
+    function renderCoupon() {
+      const idx = state.currentIndex;
+      const coupon = coupons[idx];
+      const st = state.coupons[coupon.id];
+
+      const pageIndexEl = document.getElementById("page-index");
+      const navTitleTextEl = document.getElementById("nav-title-text");
+      const pageTagEl = document.getElementById("page-tag");
+
+      pageIndexEl.textContent = `${idx + 1} / ${coupons.length}`;
+      navTitleTextEl.textContent = coupon.title;
+      pageTagEl.textContent = coupon.tag || "쿠폰";
+
+      const card = document.getElementById("coupon-card");
+      card.classList.remove("flipped");
+
+      // 앞면
+      document.getElementById("front-title").textContent = coupon.title;
+      document.getElementById("front-sub").textContent = coupon.short;
+      const chipsWrap = document.getElementById("front-chips");
+      chipsWrap.innerHTML = "";
+      const chip1 = document.createElement("div");
+      chip1.className = "chip";
+      chip1.textContent = coupon.tag;
+      chipsWrap.appendChild(chip1);
+
+      const chip2 = document.createElement("div");
+      chip2.className = "chip";
+      chip2.textContent = `총 ${coupon.total}장 중`;
+      chipsWrap.appendChild(chip2);
+
+      document.getElementById("front-remaining").textContent = `${st.remaining}장`;
+
+      const usedInfoFront = document.getElementById("front-used-info");
+      if (st.usedDates && st.usedDates.length > 0) {
+        const last = st.usedDates[st.usedDates.length - 1];
+        usedInfoFront.innerHTML = `마지막 사용일: <span>${last}</span> (총 ${st.usedDates.length}회 사용)`;
+      } else {
+        usedInfoFront.textContent = "아직 한 번도 사용하지 않았어요.";
+      }
+
+      // 뒷면
+      document.getElementById("back-title").textContent = coupon.title;
+document.getElementById("back-sub").innerHTML = coupon.desc.replace(/\n/g, "<br>");
+      const usedInfoBack = document.getElementById("back-used-info");
+      if (st.usedDates && st.usedDates.length > 0) {
+        const last = st.usedDates[st.usedDates.length - 1];
+        usedInfoBack.innerHTML = `최근 사용일: <span>${last}</span><br/>지금까지 ${st.usedDates.length}번 사용했어요.`;
+      } else {
+        usedInfoBack.textContent = "아직 사용하지 않은 새 쿠폰이에요.";
+      }
+
+      // 버튼 상태
+      const useFrontBtn = document.getElementById("use-front");
+      const useBackBtn = document.getElementById("use-back");
+      const disabled = st.remaining <= 0;
+      useFrontBtn.disabled = disabled;
+      useBackBtn.disabled = disabled;
+    }
+
+    // 페이지 넘김 애니메이션
+    function turnPage(direction) {
+      const pageEl = document.getElementById("page");
+      if (!pageEl) return;
+      pageEl.classList.remove("page-turn-left", "page-turn-right");
+      if (direction === "next") {
+        pageEl.classList.add("page-turn-right");
+      } else {
+        pageEl.classList.add("page-turn-left");
+      }
+
+      setTimeout(() => {
+        pageEl.classList.remove("page-turn-left", "page-turn-right");
+      }, 450);
+    }
+
+    // 쿠폰 사용 처리
+    let modalCouponId = null;
+
+    function openDateModal(couponId) {
+      modalCouponId = couponId;
+      const modal = document.getElementById("date-modal");
+      const input = document.getElementById("date-input");
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, "0");
+      const dd = String(today.getDate()).padStart(2, "0");
+      input.value = `${yyyy}-${mm}-${dd}`;
+      modal.classList.add("active");
+    }
+
+    function closeDateModal() {
+      modalCouponId = null;
+      const modal = document.getElementById("date-modal");
+      modal.classList.remove("active");
+    }
+
+    function confirmDate() {
+      if (!modalCouponId) {
+        closeDateModal();
+        return;
+      }
+      const input = document.getElementById("date-input");
+      const value = input.value;
+      if (!value) {
+        closeDateModal();
+        return;
+      }
+      const couponId = modalCouponId;
+      const st = state.coupons[couponId];
+      if (!st || st.remaining <= 0) {
+        closeDateModal();
+        return;
+      }
+      st.remaining -= 1;
+      st.usedDates = st.usedDates || [];
+      st.usedDates.push(value.replace(/-/g, "."));
+      saveState();
+      closeDateModal();
+      updateRemainText();
+      renderCoupon();
+    }
+
+    // 잠금
+    function setupLockScreen() {
+      const lockInput = document.getElementById("lock-input");
+      const lockBtn = document.getElementById("lock-btn");
+      const lockError = document.getElementById("lock-error");
+      const lockScreen = document.getElementById("lock-screen");
+
+      function unlock() {
+        const v = lockInput.value.trim();
+        if (v === "0918") {
+          lockScreen.style.display = "none";
+        } else {
+          lockError.textContent = "비밀번호가 틀렸어요. 다시 한 번 입력해 주세요.";
+          lockInput.value = "";
+        }
+      }
+
+      lockBtn.addEventListener("click", unlock);
+      lockInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          unlock();
+        }
+      });
+    }
+
+    // 이벤트 연결
+    function setupEvents() {
+      const prevBtn = document.getElementById("prev-btn");
+      const nextBtn = document.getElementById("next-btn");
+      const card = document.getElementById("coupon-card");
+      const flipToBack = document.getElementById("flip-to-back");
+      const flipToFront = document.getElementById("flip-to-front");
+      const useFrontBtn = document.getElementById("use-front");
+      const useBackBtn = document.getElementById("use-back");
+
+      prevBtn.addEventListener("click", () => {
+        if (state.currentIndex > 0) {
+          state.currentIndex -= 1;
+        } else {
+          state.currentIndex = coupons.length - 1;
+        }
+        saveState();
+        turnPage("prev");
+        setTimeout(renderCoupon, 120);
+      });
+
+      nextBtn.addEventListener("click", () => {
+        if (state.currentIndex < coupons.length - 1) {
+          state.currentIndex += 1;
+        } else {
+          state.currentIndex = 0;
+        }
+        saveState();
+        turnPage("next");
+        setTimeout(renderCoupon, 120);
+      });
+
+      card.addEventListener("click", (e) => {
+        // 버튼 클릭은 무시
+        if (e.target.tagName.toLowerCase() === "button") return;
+        card.classList.toggle("flipped");
+      });
+
+      flipToBack.addEventListener("click", (e) => {
+        e.stopPropagation();
+        card.classList.add("flipped");
+      });
+
+      flipToFront.addEventListener("click", (e) => {
+        e.stopPropagation();
+        card.classList.remove("flipped");
+      });
+
+      useFrontBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const coupon = coupons[state.currentIndex];
+        openDateModal(coupon.id);
+      });
+
+      useBackBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const coupon = coupons[state.currentIndex];
+        openDateModal(coupon.id);
+      });
+
+      document.getElementById("cancel-date").addEventListener("click", closeDateModal);
+      document.getElementById("confirm-date").addEventListener("click", confirmDate);
+    }
+
+    // 초기화
+    document.addEventListener("DOMContentLoaded", () => {
+      initState();
+      setupLockScreen();
+      setupEvents();
+      updateDDay();
+      updateRemainText();
+      renderCoupon();
+    });
+  </script>
+</body>
+</html>
